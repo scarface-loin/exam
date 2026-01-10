@@ -1,0 +1,33 @@
+.student-evaluations-container {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.student-evaluations-container h5 {
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.student-evaluations-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+
+.student-evaluations-container li {
+  background-color: #fefefe;
+  border: 1px solid #eee;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.average-grade {
+  font-size: 1.1em;
+  color: #2c3e50;
+}
+
+.average-grade strong {
+  color: #e74c3c;
+}
