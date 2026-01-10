@@ -17,22 +17,27 @@
     "texts": [
       {
         "id": 1,
+        "solution": "h",
         "content": "An der Ostküste Attikas in Griechenland lag in der Antike der Ort Marathon. Dort siegte der griechische König Miltiades im Jahr 490 vor Christus über das Heer der Perser. Der Sage nach soll ein Soldat die 42,2 km lange Strecke nach Athen gerannt sein... Heute ist der Marathonlauf ein olympischer Disziplin."
       },
       {
         "id": 2,
+        "solution": "f",
         "content": "Warum soll sich der Mensch nun auf Straßen und Wegen fortbewegen? Sich in Feld und Wald... Im Trend liegt jetzt der Jogging-Stroller, ein Kinderwagen mit nur noch drei bereiften Rädern. Diese neuen Transportmittel für Babys können sportbegeisterte und von grenzenloser Mobilität träumende Eltern jetzt samt Kind beim Joggen..."
       },
       {
         "id": 3,
+        "solution": "c",
         "content": "Schweizer Forscher haben herausgefunden, dass nur 6 Minuten Hochleistungstraining pro Woche - also weniger als eine Minute pro Tag - ausreichen, um den Körper fit zu halten. In einem Versuch mit mehreren Probanden... Sehr kurze und hochintensive sportliche Übungen verbessern die Fitness."
       },
       {
         "id": 4,
+        "solution": "a",
         "content": "Mehr Bewegung als Ausgleich für zu langes Sitzen im Büro... Gerade für Einsteiger gibt es jedoch bei den die Ausdauer trainierenden Sportarten wie dem Joggen einige Grundregeln, die beachtet werden müssen, will man gesundheitliche Schäden vermeiden."
       },
       {
         "id": 5,
+        "solution": "d",
         "content": "Viele frischgebackene Eltern stehen einem riesigen Angebot an Kinderwagen gegenüber... Welcher ist der richtige? Experten raten, beim Kauf dieses für die ersten Jahre mit dem Kleinkind wichtigen Gefährts auf ein paar Dinge zu achten... Vom TÜV geprüfte Kinderwagen erhalten ein Prüfzeichen."
       }
     ]
@@ -41,16 +46,16 @@
     "title": "Teil 3: Situationen zuordnen",
     "description": "Lesen Sie die Situationen 11–20 und die Anzeigen a–l. Welcher Info-Text passt zu welcher Situation? Markieren Sie x, wenn es keine Lösung gibt.",
     "situations": [
-      { "id": 11, "text": "Die Tochter einer Bekannten wird vier Jahre alt. Sie möchten ihr etwas zum Geburtstag mitbringen." },
-      { "id": 12, "text": "Ein Bekannter hat sich einen Fotoapparat gekauft und möchte die Grundlagen der Fotografie erlernen." },
-      { "id": 13, "text": "Ein Bekannter möchte eine mehrtägige Reise unternehmen und dabei einen Fotokurs machen." },
-      { "id": 14, "text": "Eine Bekannte kann gut fotografieren und hat bereits einige Kurse gemacht. Sie würde gerne neue kreative Techniken kennenlernen." },
-      { "id": 15, "text": "Ein Freund würde gerne im Winter verreisen. Er möchte viel Zeit an der frischen Luft verbringen und sich bewegen." },
-      { "id": 16, "text": "Eine Freundin hat viele Kleidungsstücke, die sie nicht mehr trägt. Sie sucht Anregungen, was sie damit machen könnte." },
-      { "id": 17, "text": "Sie besuchen einen Freund, der sich für Malerei interessiert. Sie möchten ihm ein passendes Geschenk mitbringen." },
-      { "id": 18, "text": "Sie fahren gerne Ski und möchten mit Ihrer Familie Wintersport machen." },
-      { "id": 19, "text": "Sie möchten mit Ihrem zwölfjährigen Sohn eine Ausstellung besuchen. Er interessiert sich für Tiere." },
-      { "id": 20, "text": "Sie treffen sich an einem Sonntagnachmittag mit einer Freundin, die sich gerne mit Mode und ihrer Geschichte beschäftigt." }
+      { "id": 11, "solution": "D", "text": "Die Tochter einer Bekannten wird vier Jahre alt. Sie möchten ihr etwas zum Geburtstag mitbringen." },
+      { "id": 12, "solution": "H", "text": "Ein Bekannter hat sich einen Fotoapparat gekauft und möchte die Grundlagen der Fotografie erlernen." },
+      { "id": 13, "solution": "x", "text": "Ein Bekannter möchte eine mehrtägige Reise unternehmen und dabei einen Fotokurs machen." },
+      { "id": 14, "solution": "J", "text": "Eine Bekannte kann gut fotografieren und hat bereits einige Kurse gemacht. Sie würde gerne neue kreative Techniken kennenlernen." },
+      { "id": 15, "solution": "F", "text": "Ein Freund würde gerne im Winter verreisen. Er möchte viel Zeit an der frischen Luft verbringen und sich bewegen." },
+      { "id": 16, "solution": "B", "text": "Eine Freundin hat viele Kleidungsstücke, die sie nicht mehr trägt. Sie sucht Anregungen, was sie damit machen könnte." },
+      { "id": 17, "solution": "E", "text": "Sie besuchen einen Freund, der sich für Malerei interessiert. Sie möchten ihm ein passendes Geschenk mitbringen." },
+      { "id": 18, "solution": "x", "text": "Sie fahren gerne Ski und möchten mit Ihrer Familie Wintersport machen." },
+      { "id": 19, "solution": "A", "text": "Sie möchten mit Ihrer zwölfjährigen Sohn eine Ausstellung besuchen. Er interessiert sich für Tiere." },
+      { "id": 20, "solution": "C", "text": "Sie treffen sich an einem Sonntagnachmittag mit einer Freundin, die sich gerne mit Mode und ihrer Geschichte beschäftigt." }
     ],
     "ads": [
       { "id": "A", "title": "Expedition ins Reich der Schneeleoparden", "content": "Schneeleoparden zählen zu den seltensten Großkatzen der Erde... Mitmach-Ausstellung für Groß und Klein im Zoologischen Forschungsmuseum Bonn." },
