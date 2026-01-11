@@ -28,6 +28,13 @@ const App = ({ student, timeRemaining }) => {
     fetchConfig();
   }, []);
 
+  const handleLogout = () => {
+    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+      localStorage.removeItem('exam_student');
+      window.location.reload();
+    }
+  };
+
   const goHome = () => {
     if (examType) {
       const confirmExit = window.confirm(
@@ -90,11 +97,18 @@ const App = ({ student, timeRemaining }) => {
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden sm:block text-sm font-semibold text-gray-500">
-               Bienvenue, <span className="text-blue-700">{student?.name || 'Étudiant'}</span>
+               <span className="text-blue-700">{student?.name || 'Étudiant'}</span>
             </div>
             <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-300">
               ● En ligne
             </div>
+            <button 
+              onClick={handleLogout}
+              className="text-xs text-gray-500 hover:text-red-600 transition px-2 py-1 rounded hover:bg-red-50"
+              title="Se déconnecter"
+            >
+              Déconnexion
+            </button>
           </div>
         </div>
       </nav>

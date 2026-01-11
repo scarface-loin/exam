@@ -231,6 +231,7 @@ const ExamGuard = ({ children }) => {
             if (data.success) {
                 setStudent(data.student);
                 localStorage.setItem('exam_student', JSON.stringify(data.student));
+                setStatus('loading'); // Passer à loading pour vérifier le statut de l'examen
             } else {
                 alert(data.error || "Erreur de connexion.");
             }
@@ -250,8 +251,8 @@ const ExamGuard = ({ children }) => {
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                             <User className="text-white" size={32} />
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-800">Bienvenue</h1>
-                        <p className="text-gray-500 mt-2">Identifiez-vous pour commencer</p>
+                        <h1 className="text-3xl font-bold text-gray-800">Connexion</h1>
+                        <p className="text-gray-500 mt-2">Identifiez-vous pour accéder à l'examen</p>
                     </div>
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div className="relative">
@@ -261,6 +262,7 @@ const ExamGuard = ({ children }) => {
                                 onChange={e => setFormName(e.target.value)} 
                                 placeholder="Nom et Prénom" 
                                 required 
+                                autoFocus
                                 className="w-full p-3 pl-10 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
                             />
                         </div>
@@ -270,7 +272,7 @@ const ExamGuard = ({ children }) => {
                                 type="tel" 
                                 value={formPhone} 
                                 onChange={e => setFormPhone(e.target.value)} 
-                                placeholder="Téléphone" 
+                                placeholder="Numéro de téléphone" 
                                 required 
                                 className="w-full p-3 pl-10 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
                             />
@@ -278,16 +280,28 @@ const ExamGuard = ({ children }) => {
                         <button 
                             type="submit" 
                             disabled={loadingLogin} 
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition shadow-lg disabled:opacity-50"
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loadingLogin ? 'Connexion...' : (
+                            {loadingLogin ? (
                                 <>
-                                    Continuer
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    Connexion...
+                                </>
+                            ) : (
+                                <>
+                                    Se connecter
                                     <ArrowRight size={20} />
                                 </>
                             )}
                         </button>
                     </form>
+                    {formName && formPhone && (
+                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-xs text-blue-700 text-center">
+                                💡 Vos informations sont pré-remplies depuis votre dernière visite
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         );
