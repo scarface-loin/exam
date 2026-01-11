@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "exam_name": "TELC B1 Simulation",
+    "level": "B1",
+    "language": "de"
+  },
+  "parts": [
+    {
+      "id": "leseverstehen_teil_2",
+      "type": "multiple_choice",
+      "title": "Leseverstehen, Teil 2",
+      "instruction": "Lesen Sie den Text und die Aufgaben 6–10. Welche Lösung (a, b oder c) ist jeweils richtig?",
+      "items": [
+        {
+          "question_id": "6",
+          "question": "Über das private Leben von Philipp Reis",
+          "choices": [
+            { "key": "a", "text": "gibt es nur wenige Berichte aus seiner Familie." },
+            { "key": "b", "text": "kann man im Garnier-Institut viele Berichte finden." },
+            { "key": "c", "text": "kann man in Gelnhausen viel erfahren." }
+          ]
+        },
+        {
+          "question_id": "7",
+          "question": "Heute weiß man, dass Philipp Reis",
+          "choices": [
+            { "key": "a", "text": "bei seinen Versuchen die Familie vergaß." },
+            { "key": "b", "text": "seinen Kindern viel über seine Experimente erzählte." },
+            { "key": "c", "text": "sogar mit seiner Familie Experimente machte." }
+          ]
+        },
+        {
+          "question_id": "8",
+          "question": "Philipp Reis",
+          "choices": [
+            { "key": "a", "text": "hat viele technische Geräte gebaut." },
+            { "key": "b", "text": "leitete als junger Wissenschaftler das Garnier-Institut." },
+            { "key": "c", "text": "studierte am Garnier-Institut." }
+          ]
+        },
+        {
+          "question_id": "9",
+          "question": "Die Schüler von Philipp Reis",
+          "choices": [
+            { "key": "a", "text": "konnten ihren Lehrer in seinem Arbeitszimmer sehen." },
+            { "key": "b", "text": "machten in seinem Arbeitszimmer Experimente." },
+            { "key": "c", "text": "wurden von ihrem Lehrer mit einer Kamera beobachtet." }
+          ]
+        },
+        {
+          "question_id": "10",
+          "question": "Professor Thompson",
+          "choices": [
+            { "key": "a", "text": "hat bei der Entwicklung des Telefons mitgearbeitet." },
+            { "key": "b", "text": "meinte, dass Reis das Telefon erfunden hat." },
+            { "key": "c", "text": "war ein Studienkollege von Philipp Reis." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leseverstehen_teil_3",
+      "type": "matching_situations",
+      "title": "Leseverstehen, Teil 3",
+      "instruction": "Lesen Sie die Situationen 11–20 und die Anzeigen a–l. Finden Sie für jede die passende Anzeige. Wenn Sie keine passende Anzeige finden, markieren Sie x.",
+      "items": [
+        { "question_id": "11" },
+        { "question_id": "12" },
+        { "question_id": "13" },
+        { "question_id": "14" },
+        { "question_id": "15" },
+        { "question_id": "16" },
+        { "question_id": "17" },
+        { "question_id": "18" },
+        { "question_id": "19" },
+        { "question_id": "20" }
+      ],
+      "options": [
+        { "id": "a" }, { "id": "b" }, { "id": "c" }, { "id": "d" }, { "id": "e" },
+        { "id": "f" }, { "id": "g" }, { "id": "h" }, { "id": "i" }, { "id": "j" },
+        { "id": "k" }, { "id": "l" }, { "id": "x" }
+      ]
+    },
+    {
+      "id": "sprachbausteine_teil_1",
+      "type": "gap_fill_choice",
+      "title": "Sprachbausteine, Teil 1",
+      "instruction": "Lesen Sie den Text und schließen Sie Lücken 21–30. Welche Lösungen (a, b oder c) ist jeweils richtig?",
+      "items": [
+        { "question_id": "21", "choices": ["Aber", "denn", "weil"] },
+        { "question_id": "22", "choices": ["wo", "woher", "wohin"] },
+        { "question_id": "23", "choices": ["An", "für", "in"] },
+        { "question_id": "24", "choices": ["als", "wie", "wo"] },
+        { "question_id": "25", "choices": ["unser", "unseren", "unseres"] },
+        { "question_id": "26", "choices": ["dringende", "dringenden", "dringender"] },
+        { "question_id": "27", "choices": ["bin", "werde", "würde"] },
+        { "question_id": "28", "choices": ["meiner", "mich", "mir"] },
+        { "question_id": "29", "choices": ["kenne", "kennen", "kennt"] },
+        { "question_id": "30", "choices": ["ein", "einem", "einen"] }
+      ]
+    },
+    {
+      "id": "sprachbausteine_teil_2",
+      "type": "gap_fill_bank",
+      "title": "Sprachbausteine, Teil 2",
+      "instruction": "Lesen Sie den Text und schließen Sie die Wörter (a–o). Jedes Wort passt nur einmal.",
+      "items": [
+        { "question_id": "31" }, { "question_id": "32" }, { "question_id": "33" },
+        { "question_id": "34" }, { "question_id": "35" }, { "question_id": "36" },
+        { "question_id": "37" }, { "question_id": "38" }, { "question_id": "39" },
+        { "question_id": "40" }
+      ],
+      "word_bank": [
+        { "key": "a", "word": "ANFRAGE" },
+        { "key": "b", "word": "ANGEBOT" },
+        { "key": "c", "word": "DABEI" },
+        { "key": "d", "word": "DAFÜR" },
+        { "key": "e", "word": "DANACH" },
+        { "key": "f", "word": "DARIN" },
+        { "key": "g", "word": "DESHALB" },
+        { "key": "h", "word": "HÄTTE" },
+        { "key": "i", "word": "MIT" },
+        { "key": "j", "word": "MÖCHTE" },
+        { "key": "k", "word": "NÄMLICH" },
+        { "key": "l", "word": "UNTER" },
+        { "key": "m", "word": "WÄRE" },
+        { "key": "n", "word": "WELCHE" },
+        { "key": "o", "word": "WENN" }
+      ]
+    }
+  ]
+}

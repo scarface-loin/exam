@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "exam_name": "Telc B2 Simulation",
+    "language": "de",
+    "level": "B2"
+  },
+  "parts": [
+    {
+      "id": "part_1",
+      "type": "matching_headlines",
+      "title": "Leseverstehen, Teil 1",
+      "instruction": "Lesen Sie die 10 Überschriften und die 5 Texte. Welche Überschrift passt am besten?",
+      "options": [
+        { "id": "a", "text": "Deutscher Forscher startet Expedition auf Vogelinsel in Südamerika" },
+        { "id": "b", "text": "Die beliebtesten Reiseziele unter den europäischen Inseln" },
+        { "id": "c", "text": "Fernreisen in eine unberührte Tierwelt" },
+        { "id": "d", "text": "Geführte Bootsausflüge zu einsamen Badebuchten" },
+        { "id": "e", "text": "Grüne Geisterinsel in Asien" },
+        { "id": "f", "text": "Immer mehr Reiseunternehmen streichen Thailand aus ihrem Angebot" },
+        { "id": "g", "text": "Inseln zählen weltweit zu den wichtigsten Reisedestinationen" },
+        { "id": "h", "text": "Nachhaltiger Tourismus auf chinesischen Inseln" },
+        { "id": "i", "text": "Tierparadies auf einer Nordseeinsel" },
+        { "id": "j", "text": "Umstrittener Umgang mit Tieren als Touristenmagnet" }
+      ],
+      "items": [
+        { "question_id": "1", "text_content": "Die Shengsi-Inseln liegen im Ostchinesischen Meer..." },
+        { "question_id": "2", "text_content": "Der Reiseveranstalter TOURIMARS hat kürzlich eine Befragung durchgeführt..." },
+        { "question_id": "3", "text_content": "Das ostfriesische Memmert ist für selten Vögel reserviert..." },
+        { "question_id": "4", "text_content": "Die südamerikanischen Galapagosinseln locken nicht mit weißen Sandstränden..." },
+        { "question_id": "5", "text_content": "Dass Elefanten in Thailand teurer sein können als ein 3er-BMW..." }
+      ]
+    },
+    {
+      "id": "part_2",
+      "type": "multiple_choice",
+      "title": "Leseverstehen, Teil 2",
+      "instruction": "Lesen Sie den Text und die Aufgaben 6–10. Wählen Sie die richtige Lösung (a, b oder c).",
+      "reading_text": "Krista ist die schönste Kuh Deutschlands. Und jetzt auch noch ein Kinostar...",
+      "items": [
+        {
+          "question_id": "6",
+          "question": "Holstein-Rinder",
+          "choices": [
+            { "key": "a", "text": "sind in der Milchproduktion beliebter als andere Rinderrassen." },
+            { "key": "b", "text": "spielen in der Milchproduktion kaum eine Rolle." },
+            { "key": "c", "text": "stammen aus Norddeutschland." }
+          ]
+        },
+        {
+          "question_id": "7",
+          "question": "Die Kuh Krista",
+          "choices": [
+            { "key": "a", "text": "hat bereits einige Preise gewonnen." },
+            { "key": "b", "text": "war Siegerin bei einer Veranstaltung in Italien." },
+            { "key": "c", "text": "wurde als schönste Kuh Europas ausgezeichnet." }
+          ]
+        },
+        {
+          "question_id": "8",
+          "question": "Während der Filmaufnahmen",
+          "choices": [
+            { "key": "a", "text": "bekam Krista ein Kalb." },
+            { "key": "b", "text": "wäre Krista fast gestorben." },
+            { "key": "c", "text": "wurde Krista operiert." }
+          ]
+        },
+        {
+          "question_id": "9",
+          "question": "Die wirtschaftlichen Probleme von Milchbetrieben",
+          "choices": [
+            { "key": "a", "text": "betreffen die Familie Seeger nicht." },
+            { "key": "b", "text": "sind eine Folge des Verbraucherverhaltens." },
+            { "key": "c", "text": "werden im Film ausführlich behandelt." }
+          ]
+        },
+        {
+          "question_id": "10",
+          "question": "'Die schöne Krista'",
+          "choices": [
+            { "key": "a", "text": "begeistert Kinobetreiber bislang nicht." },
+            { "key": "b", "text": "könnte die Kritiker nicht überzeugen." },
+            { "key": "c", "text": "wurde als beste Dokumentation ausgezeichnet." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part_3",
+      "type": "gap_fill_choice",
+      "title": "Sprachbausteine, Teil 1",
+      "instruction": "Welches Wort passt in die Lücke?",
+      "reading_text": "Hallo Ferdinand, nun habe ich mich schon so lange nicht bei dir gemeldet...",
+      "items": [
+        { "question_id": "21", "choices": ["anstatt", "ohne", "um"] },
+        { "question_id": "22", "choices": ["dass", "ob", "während"] },
+        { "question_id": "23", "choices": ["aber", "denn", "und"] },
+        { "question_id": "24", "choices": ["bestimmt", "unbedingt", "völlig"] },
+        { "question_id": "25", "choices": ["dich", "mich", "sich"] },
+        { "question_id": "26", "choices": ["als", "wenn", "wie"] },
+        { "question_id": "27", "choices": ["baldigen", "kommenden", "vergangenen"] },
+        { "question_id": "28", "choices": ["danach", "darüber", "dazu"] },
+        { "question_id": "29", "choices": ["aber", "oder", "sondern"] },
+        { "question_id": "30", "choices": ["für", "gegen", "ohne"] }
+      ]
+    },
+    {
+      "id": "part_4",
+      "type": "gap_fill_bank",
+      "title": "Sprachbausteine, Teil 2",
+      "instruction": "Welches Wort aus dem Kasten passt in die Lücken 31–40?",
+      "reading_text": "Es gibt inzwischen zahlreiche Online-Sprachkurse und __(31)__ mit Smartphones kann man Sprachen lernen...",
+      "word_bank": [
+        { "key": "a", "word": "ABER" }, { "key": "b", "word": "ANSTATT" }, { "key": "c", "word": "BESONDERS" },
+        { "key": "d", "word": "FÜR" }, { "key": "e", "word": "KAUM" }, { "key": "f", "word": "MIT" },
+        { "key": "g", "word": "MÜSSTE" }, { "key": "h", "word": "OHNE" }, { "key": "i", "word": "SCHON" },
+        { "key": "j", "word": "SO" }, { "key": "k", "word": "SOGAR" }, { "key": "l", "word": "SOLLTE" },
+        { "key": "m", "word": "SONDERN" }, { "key": "n", "word": "UM" }, { "key": "o", "word": "VON" }
+      ],
+      "items": [
+        { "question_id": "31" }, { "question_id": "32" }, { "question_id": "33" },
+        { "question_id": "34" }, { "question_id": "35" }, { "question_id": "36" },
+        { "question_id": "37" }, { "question_id": "38" }, { "question_id": "39" },
+        { "question_id": "40" }
+      ]
+    }
+  ]
+}

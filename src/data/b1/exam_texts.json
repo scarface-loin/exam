@@ -1,0 +1,50 @@
+{
+  "texts": {
+    "leseverstehen_teil_2": {
+      "title": "Leseverstehen, Teil 2",
+      "headline": "Philipp Reis – der wahre Erfinder des Telefons?",
+      "subheadline": "Erfinder, Lehrer, Familienvater – Auf den Spuren von Philipp Reis besuchte Susanne Müller seinen Geburtsort.",
+      "content": "Weil sein Vater nie aufgeschrieben habe, was er machte, ist mancher gute Gedanke verloren gegangen, klagt später einmal Karl Reis. Auch gibt es wenige offizielle Berichte und Dokumente über Philipp Reis in Friedrichsdorf und in seiner Geburtsstadt Gelnhausen. Das gilt besonders für das private Leben der Familie Reis, die ab 1852 in unmittelbarer Nähe des berühmten Garnier-Instituts in Friedrichsdorf ein Haus gefunden hatte. Berichte des Sohnes Karl Reis erzählen ein wenig mehr über das Leben des Erfinders. Karl Reis, der beim Tod des Vaters erst elf Jahre alt war, erinnert sich nicht mehr an alle Einzelheiten. Sicher ist, dass er, um seine Frau und seine Kinder besorgt hat. Wenn der Vater aber seine Experimente machte, vergaß er alles um sich herum.\nPhilipp Reis lernte bereits als Junge viele technische Maschinen kennen und machte eine Reihe von Experimenten, die er als Lehrer am Garnier-Institut fortsetzte. Er entwickelte eine große Anzahl von technischen Geräten, die im Institut verwendet werden konnten. Auf die Schüler machte Philipp Reis einen oft sehr merkwürdigen Eindruck. Verwundert waren die Schüler besonders dann, wenn Reis Aufsicht hatte, aber nicht im Klassenzimmer anwesend war.\nTrotzdem konnte Reis alles hören und wusste, was passiert war. Philipp Reis hatte eine besondere Kamera gebaut, mit der er von seinem Arbeitszimmer aus in den gleichen Experimentierraum durchführen in den Klassenräume schauen konnte. Ein Draht, der über den Schulhof zu sein Arbeitszimmer führte, diente als Vorläufer des späteren Telefons. Auf den Schülern und Lehrern entstand so der Ruf, dass der Reis auf geheimnisvolle Weise alles sehen kann.\n1861 schrieb der englische Professor Silvanus Thompson einen Bericht über Reis und nannte ihn den wahren Erfinder des Telefons. Philipp Reis habe das Telefon entwickelt, und nicht Graham Bell oder Thomas Edison. Doch die Amerikaner setzten ihre Forschungen fort. Ihre Berichte und Artikel über das Telefon wurden auch in Europa bekannt. 1877, drei Jahre nach dem Tod von Reis, wurde das Philipp Reis Experiment in Deutschland eingeweiht. Seine offizielle Anerkennung als Erfinder des Telefons hat Philipp Reis allerdings nicht mehr erlebt. Im Jahre 1874 ist er in Friedrichsdorf an einer Lungenkrankheit gestorben."
+    },
+    "leseverstehen_teil_3": {
+      "title": "Leseverstehen, Teil 3",
+      "instruction": "Lesen Sie die Situationen 11–20 und die Anzeigen a–l. Finden Sie für jede die passende Anzeige.",
+      "situations": [
+        { "id": 11, "text": "Sie lieben Krimis und möchten daher einer Krimiautorin beim Vorlesen zuhören." },
+        { "id": 12, "text": "Ihr Bekannter würde gerne am Wochenende ein Boot mieten." },
+        { "id": 13, "text": "Sie möchten sich in einem Hotel in den Bergen erholen und mit dem Zug anreisen." },
+        { "id": 14, "text": "Sie möchten sich eine Märchenvorstellung im Theater ansehen." },
+        { "id": 15, "text": "Ihre Freundin sucht ein angenehmes Hotel, in dem man auch Sport treiben kann." },
+        { "id": 16, "text": "Am Sonntag wollen Sie einen kleinen Ausflug mit Kindern machen. Die Kinder mögen Tiere." },
+        { "id": 17, "text": "Ihre Bekannten möchten gerne im Mai eine Schiffsfahrt machen." },
+        { "id": 18, "text": "Sie möchten gerne am Wochenende tanzen gehen und suchen eine tolle Disco." },
+        { "id": 19, "text": "Der kleine Sohn von Freunden ist begeistert von der Eisenbahn. Sie möchten am Wochenende mit ihm etwas Interessantes machen." },
+        { "id": 20, "text": "Sie möchten im August eine Woche in den Bergen wandern und brauchen eine erfahren Person, die mit ihnen geht." }
+      ],
+      "ads": [
+        { "id": "a", "title": "OBER-GOMS", "content": "Wandern im Wallis. 28. Juli-29. September. Erfahrene Wanderführerinnen und Wanderführer. 200 km Wanderwege. Hotel Walser, Tel. 027 973 25 25. Anreise mit der Bahn möglich." },
+        { "id": "b", "title": "Ausstellung Märchen – Mythen – Erzählungen", "content": "Acht Künstlerinnen zeigen ihre Werke. Vom 2. bis 30. Juni in Thun. Das Publikum ist während der Zeit der Ausstellung herzlich eingeladen, in den Fenstern der Innenstadt gezeigt. Vernissage: 2. Juni, 19.30 Uhr. Schadaupark Thun." },
+        { "id": "c", "title": "Chocolat-Werbung", "content": "Im Rahmen der Ausstellung Choccolatissimo. Vorführungen für Schokoladen-Liebhaber. Jeden Donnerstag um 14.00 Uhr findet bei Jacot und Fritz Kloss im Konferenzraum alte Werbung vom Chocolat Frey statt. Bis 19. Juni. Konferenzraum – 19 Uhr." },
+        { "id": "d", "title": "Sarazena", "content": "Hotel & Restaurant, Zermatt. Herzlich willkommen im neu renovierten Ferienhotel in zentraler Lage mit allem Komfort. Fitnessraum, Hallenbad. Bruno & Catherine Wysch-Zurutuza. Tel. 027 966 30 66. www.hotel-sarazena.ch" },
+        { "id": "e", "title": "DAS ARZNEIMITTEL", "content": "Kulturtipp. Eine kriminelle Komödie auf der Bühne. Theaterhaus Gessnerallee Zürich. Tel. 044 225 81 11" },
+        { "id": "f", "title": "SCHWEIZER FERIENORT", "content": "ZERMATT. Erholung pur im Naturfreunde-Hotel ZERMATT. Schöne Ferienwohnungen. Eigener Bahnhofbus." },
+        { "id": "g", "title": "Tierpark Goldau", "content": "Ein Besuch, der sich lohnt. Restaurant mit 100 Plätzen. Abendspielplatz. Eintritt pro Person 10 Fr. Eintritt bis 16 Personen. Tel. 041 465 50 00." },
+        { "id": "h", "title": "DER FEURIGE ELIAS", "content": "Historische Lokomotiven und Waggons, jetzt im Verkehrshaus der Schweiz zu finden. Führungen für Kinder und Erwachsene jeden Samstag und Sonntag zwischen 14-16:00 Uhr. Info: Tel. 041 370 44 44" },
+        { "id": "i", "title": "ANDREAS TIERWELT", "content": "Vögel – Nager – Pflanzen. Hunde und Katzenpension. Tierberatung. Tel. 042 622 30 20" },
+        { "id": "j", "title": "TANZ-IMPLUS", "content": "Schule für modernen Tanz, klassisches Ballett, HipHop und Tanz. Freitag, 21. Juni 20.00 Uhr. Für Jugendliche und Erwachsene, max. 10 Teilnehmende." },
+        { "id": "k", "title": "JÄGGI BUCHHANDLUNG", "content": "Ingrid Noll liest aus ihrem neuesten Kriminalroman. Deutsche Krimikönigin liest aus ihrem neuesten Werk „Ladylike mit Zwilling“. Eintritt Fr. 10.00. 0646 800 800." },
+        { "id": "l", "title": "Viking-Tours", "content": "Flussreisen auf Rhein und Rhône. Tägliche Fahrten von Mai bis Sept. Abfahrt: ab Zermatt 12 Uhr, 15 Uhr, 16 Uhr. Treffpunkt: Thun/Schwäbis Schiffs-Anlegestelle. Abendfahrten (Rückkehr 23 Uhr). Sonderangebote für Senioren." }
+      ]
+    },
+    "sprachbausteine_teil_1": {
+      "title": "Sprachbausteine, Teil 1",
+      "headline": "Grenzacker",
+      "content": "Liebe Frau Grenzacker,\n\nleider habe ich Sie vor den Feiertagen nicht mehr angetroffen. __(21)__ schreibe ich Ihnen nun aus dem Skiparadies Obergurgl __(22)__ ich jetzt mit einigen Freunden die Winterferien verbringe. Nochmals vielen Dank für die selbst gebackenen Kekse, die Sie mir bei unserem letzten Treffen __(23)__ die Reise mitgegeben haben. Sie schmecken köstlich zu unserem Glühwein, den wir abends in gemütlicher Runde trinken. Im Skikurs mache ich langsam Fortschritte, aber es ist gar nicht so einfach __(24)__ es aussieht. Ich möchte übrigens erst am Montag direkt zur Präsentation __(25)__ Projekts in Wien zurück sein. In __(26)__ Fällen würde ich aber auch schon früher abreisen. Allerdings __(27)__ ich telefonisch nur über Handy erreichbar. Im Notfall müssten Sie __(28)__ eine SMS oder eine E-Mail schicken. Meine Handy-Nummer und E-Mail Adresse __(29)__ Sie ja.\n\nIch hoffe, dass auch Sie mit Ihrer Familie __(30)__ erholsamen Urlaub verbracht haben!\n\nMit lieben Grüßen\nIhre Monika Riedel"
+    },
+    "sprachbausteine_teil_2": {
+      "title": "Sprachbausteine, Teil 2",
+      "headline": "Sahara-Länder",
+      "content": "Sehr geehrte Damen und Herren,\n\nseit längerem plane ich eine Wanderreise in die Sahara-Länder. Nun ist mir beim Lesen der Zeitschrift Bravo die Anzeige von Geo-Tours aufgefallen, deren __(31)__ steht, dass Sie auf Erlebnisreisen in Wüstenregionen spezialisiert sind. Vielleicht haben Sie das richtige Angebot für uns - __(32)__ für mich und meine 17-jährige Tochter. Unsere Vorstellungen sind im Einzelnen diese:\n\nZuerst eine Wanderreise, etwa 10 Tage, möglichst leichte Tageswanderungen (ca. 4 – 5 Stunden), und __(33)__ ein Erholungsurlaub am Meer. Bieten Sie solche Kombinationen an? Und __(34)__ zu welchem Preis? Zur Wanderreise __(35)__ ich noch folgende Fragen: Wird das Gepäck von einem Übernachtungsort zum nächsten transportiert? Schläft man immer __(36)__ freiem Himmel? Ich __(37)__ auch wissen, wie die Reisegruppen zusammengesetzt sind, __(38)__ Sprache die Reiseleiterin/ der Reiseleiter spricht und ob ein Arzt __(39)__ ist.\n\nIch freue mich auf Ihr __(40)__.\n\nMit freundlichen Grüßen\nANNETTE LUCHSINGER"
+    }
+  }
+}
