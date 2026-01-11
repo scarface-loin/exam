@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// IMPORT DE VOS DONNÉES SPÉCIFIQUES B2
-import examDataStructure from './data/b2/exam_data.json';
-import examTextsSource from './data/b2/exam_texts.json';
-import examSolutionsFile from './data/b2/exam_solutions.json';
-
 import { 
   CheckCircle2, XCircle, BookOpen, Trophy, Menu, 
   ChevronDown, ChevronUp, ArrowRight, ArrowLeft, Home 
 } from 'lucide-react';
 
+// NOUVEAU : Import du composant de résultats détaillés
+import DetailedResults from './DetailedResults';
+
+// === IMPORT DES DONNÉES SPÉCIFIQUES B2 ===
+import examDataStructure from './data/b2/exam_data.json';
+import examTextsSource from './data/b2/exam_texts.json';
+import examSolutionsFile from './data/b2/exam_solutions.json';
+
 const API_URL = "https://wavy-server.onrender.com";
 
-const ExamB2 = ({ student, onExit, submitTrigger  }) => {
+const ExamB2 = ({ student, onExit, submitTrigger }) => {
   
   // ==========================================
   // 1. FUSION DES DONNÉES (DATA + TEXTES)
@@ -58,6 +61,8 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [submitted, setSubmitted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [startTime] = useState(Date.now()); // NOUVEAU : Enregistrement du temps de début
+  const [timeTaken, setTimeTaken] = useState(0); // NOUVEAU : Temps total pris
   
   const currentPart = examData.parts[activePartIndex];
 
@@ -69,13 +74,32 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
- useEffect(() => {
-        // Si le trigger est supérieur à 0 (il a été appelé) et que l'examen n'est pas déjà fini
-        if (submitTrigger > 0 && !showResults) {
-            console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
-            setShowResults(true); // Déclenche la sauvegarde et l'affichage des résultats
-        }
-    }, [submitTrigger]); // Se déclenche seulement quand `submitTrigger` change
+  // AMÉLIORATION : Sauvegarde automatique des réponses
+  useEffect(() => {
+    if (!showResults && Object.keys(answers).length > 0) {
+      sessionStorage.setItem(`exam_b2_answers_${student.phone}`, JSON.stringify(answers));
+    }
+  }, [answers, showResults, student.phone]);
+
+  // AMÉLIORATION : Récupération des réponses en cas de rechargement
+  useEffect(() => {
+    const savedAnswers = sessionStorage.getItem(`exam_b2_answers_${student.phone}`);
+    if (savedAnswers) {
+      try {
+        setAnswers(JSON.parse(savedAnswers));
+      } catch (e) {
+        console.error("Erreur lors de la récupération des réponses sauvegardées");
+      }
+    }
+  }, [student.phone]);
+
+  useEffect(() => {
+    if (submitTrigger > 0 && !showResults) {
+      console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
+      setTimeTaken(Date.now() - startTime); // NOUVEAU : Calcul du temps pris
+      setShowResults(true);
+    }
+  }, [submitTrigger, showResults, startTime]);
 
   const calculateAndSendScore = () => {
     let correctCount = 0;
@@ -100,20 +124,26 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
           student_name: student.name,
           score: correctCount,
           total: totalQuestions,
-          answers: answers
+          answers: answers,
+          timeTaken: timeTaken // NOUVEAU : Envoi du temps pris
         })
       })
       .then(res => res.json())
-      .then(() => setSubmitted(true))
+      .then(() => {
+        setSubmitted(true);
+        // NOUVEAU : Nettoyage des données sauvegardées
+        sessionStorage.removeItem(`exam_b2_answers_${student.phone}`);
+      })
       .catch(err => console.error("Erreur API:", err));
     }
   };
 
   useEffect(() => {
     if (showResults && !submitted) {
+      setTimeTaken(Date.now() - startTime); // Mise à jour finale du temps
       calculateAndSendScore();
     }
-  }, [showResults]);
+  }, [showResults, submitted, startTime]);
 
   const getBtnClass = (questionId, optionKey, isRound = false) => {
     const isSelected = answers[questionId] === optionKey;
@@ -134,7 +164,26 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
     }
   };
 
-  // --- RENDU ---
+  // ==========================================
+  // 4. RENDU PRINCIPAL
+  // ==========================================
+
+  // NOUVEAU : Si l'examen est terminé, afficher les résultats détaillés
+  if (showResults && submitted) {
+    return (
+      <DetailedResults
+        score={score}
+        answers={answers}
+        solutions={solutions}
+        examData={examData}
+        student={student}
+        examType="Telc B2"
+        timeTaken={timeTaken}
+        onExit={onExit}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 pb-28 font-sans text-gray-900">
       
@@ -164,14 +213,19 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
 
              {!showResults ? (
               <button 
-                onClick={() => { if(confirm("Valider l'examen ?")) setShowResults(true); }}
-                className="bg-emerald-500 text-white hover:bg-emerald-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition active:scale-95"
+                onClick={() => { 
+                  if(confirm("Êtes-vous sûr de vouloir terminer l'examen ?")) {
+                    setTimeTaken(Date.now() - startTime);
+                    setShowResults(true);
+                  }
+                }}
+                className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition active:scale-95"
               >
-                Valider
+                Terminer
               </button>
             ) : (
-              <div className="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold border border-gray-200">
-                 {score.correct}/{score.total} pts
+              <div className="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 text-blue-700">
+                 Calcul...
               </div>
             )}
           </div>
@@ -184,7 +238,7 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
                       key={part.id}
                       onClick={() => { setActivePartIndex(idx); setIsMenuOpen(false); }}
                       className={`whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-full transition-colors ${
-                         activePartIndex === idx ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'
+                         activePartIndex === idx ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                       }`}
                    >
                       {idx + 1}. {part.type.replace(/_/g, ' ').split(' ')[0]}
@@ -198,25 +252,6 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
       {/* CONTENU PRINCIPAL */}
       <main className="max-w-3xl mx-auto p-4 space-y-6">
           
-          {/* Résultat final */}
-          {showResults && activePartIndex === 0 && (
-            <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl flex items-center justify-between animate-fade-in">
-              <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-full ${score.correct/score.total >= 0.6 ? 'bg-yellow-500' : 'bg-red-500'}`}>
-                    <Trophy className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Score B2</p>
-                    <p className="text-3xl font-extrabold">{Math.round((score.correct / score.total) * 100)}%</p>
-                  </div>
-              </div>
-              <div className="text-right">
-                 <span className="text-4xl font-bold">{score.correct}</span>
-                 <span className="text-gray-400 text-sm"> / {score.total}</span>
-              </div>
-            </div>
-          )}
-
           {/* Consigne */}
           <div className="bg-white border-l-4 border-blue-500 rounded-r-xl shadow-sm p-4 text-sm md:text-base text-gray-700 leading-relaxed">
              <span className="font-bold text-blue-900 block mb-1">Aufgabe:</span>
@@ -293,7 +328,7 @@ const ExamB2 = ({ student, onExit, submitTrigger  }) => {
 
 
 // =========================================================
-//  SOUS-COMPOSANTS (RÉINTÉGRÉS COMPLETS)
+//  SOUS-COMPOSANTS (IDENTIQUES À L'ORIGINAL)
 // =========================================================
 
 // --- 1. APPARIEMENT DE TITRES ---
@@ -515,8 +550,9 @@ const GapFillBankPart = ({ part, answers, onAnswer, showResults, solutions }) =>
              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 max-h-48 overflow-y-auto">
                 {part.word_bank.map((opt) => {
                    const isActive = answers[focusedQId] === opt.key.toLowerCase();
+                   const isUsed = Object.values(answers).includes(opt.key.toLowerCase()) && !isActive;
                    return (
-                      <button key={opt.key} disabled={showResults || (!focusedQId && window.innerWidth < 768)} onClick={() => { if(focusedQId) { onAnswer(focusedQId, opt.key.toLowerCase()); setFocusedQId(null); } }} className={`py-2 px-1 text-xs md:text-sm rounded-lg border font-semibold truncate transition-all ${isActive ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-50'}`}>
+                      <button key={opt.key} disabled={showResults || (!focusedQId && window.innerWidth < 768) || isUsed} onClick={() => { if(focusedQId) { onAnswer(focusedQId, opt.key.toLowerCase()); setFocusedQId(null); } }} className={`py-2 px-1 text-xs md:text-sm rounded-lg border font-semibold truncate transition-all ${isActive ? 'bg-blue-600 text-white' : (isUsed ? 'bg-gray-100 text-gray-300' : 'bg-white hover:bg-gray-50')}`}>
                          <span className="mr-1 opacity-50 text-[10px]">{opt.key})</span>{opt.word}
                       </button>
                    );

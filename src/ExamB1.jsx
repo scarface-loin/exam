@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 // NOUVEAU : Import du composant de résultats détaillés
-import DetailedResults from './DetailedResults';
+import DetailedResults from './DetailedResults.jsx';
 
 // === IMPORT DES DONNÉES SPÉCIFIQUES B1 ===
 import examDataStructure from './data/b1/exam_data.json';
