@@ -141,11 +141,11 @@ const ExamB1 = ({ student, onExit, submitTrigger, timeRemaining }) => {
 
       // EXO 1 (Disons questions 1 à 5) -> 5 points
       if (qNum >= 1 && qNum <= 5) {
-          points = 2.5;
+          points = 5;
       } 
       // EXO 2 (Disons questions 6 à 10) -> 2.5 points
       else if (qNum >= 6 && qNum <= 10) {
-          points = 5;
+          points = 2.5;
       } 
       // EXO 3 et 4 (Le reste des questions, ex: 11 à 45) -> 1.5 points
       else {
