@@ -9,16 +9,47 @@ const ServerTimer = ({ studentName }) => {
     const [isBlinking, setIsBlinking] = useState(false);
 
     useEffect(() => {
-        const ws = new WebSocket(API_URL.replace('https://', 'wss://').replace('http://', 'ws://'));
-        
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'time_update') {
-                setTimeLeft(data.timeRemaining);
+        let ws = null;
+        let reconnectTimeout = null;
+
+        const connect = () => {
+            try {
+                ws = new WebSocket(API_URL.replace('https://', 'wss://').replace('http://', 'ws://'));
+                
+                ws.onopen = () => {
+                    console.log('⏱️ Timer WebSocket connecté');
+                };
+                
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'time_update') {
+                        setTimeLeft(data.timeRemaining);
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    console.error('Erreur WebSocket Timer:', error);
+                };
+
+                ws.onclose = () => {
+                    console.log('⏱️ Timer WebSocket déconnecté, reconnexion...');
+                    reconnectTimeout = setTimeout(connect, 3000);
+                };
+            } catch (error) {
+                console.error('Erreur connexion Timer:', error);
+                reconnectTimeout = setTimeout(connect, 3000);
             }
         };
 
-        return () => ws.close();
+        connect();
+
+        return () => {
+            if (reconnectTimeout) clearTimeout(reconnectTimeout);
+            if (ws) {
+                ws.onclose = null; // Empêcher la reconnexion automatique
+                ws.close();
+            }
+        };
     }, []);
     
     const formatTime = (ms) => {
@@ -80,32 +111,56 @@ const ExamGuard = ({ children }) => {
     useEffect(() => {
         if (!student) return;
 
-        const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
-        const ws = new WebSocket(wsUrl);
-        
-        ws.onopen = () => {
-            console.log('✅ WebSocket connecté');
-            setIsConnected(true);
-        };
-        
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'time_update') {
-                setTimeRemaining(data.timeRemaining);
+        let ws = null;
+        let reconnectTimeout = null;
+
+        const connect = () => {
+            try {
+                const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
+                ws = new WebSocket(wsUrl);
                 
-                // Mise à jour du statut basé sur le temps
-                if (!data.isRunning && data.timeRemaining === 0) {
-                    setStatus('finished');
-                }
+                ws.onopen = () => {
+                    console.log('✅ WebSocket connecté');
+                    setIsConnected(true);
+                };
+                
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'time_update') {
+                        setTimeRemaining(data.timeRemaining);
+                        
+                        // Mise à jour du statut basé sur le temps
+                        if (!data.isRunning && data.timeRemaining === 0) {
+                            setStatus('finished');
+                        }
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    console.error('Erreur WebSocket:', error);
+                };
+                
+                ws.onclose = () => {
+                    console.log('🔌 WebSocket déconnecté, reconnexion...');
+                    setIsConnected(false);
+                    reconnectTimeout = setTimeout(connect, 3000);
+                };
+            } catch (error) {
+                console.error('Erreur connexion WebSocket:', error);
+                setIsConnected(false);
+                reconnectTimeout = setTimeout(connect, 3000);
             }
         };
-        
-        ws.onclose = () => {
-            console.log('🔌 WebSocket déconnecté');
-            setIsConnected(false);
-        };
 
-        return () => ws.close();
+        connect();
+
+        return () => {
+            if (reconnectTimeout) clearTimeout(reconnectTimeout);
+            if (ws) {
+                ws.onclose = null; // Empêcher la reconnexion automatique lors du démontage
+                ws.close();
+            }
+        };
     }, [student]);
 
     // Chargement de l'étudiant depuis localStorage
@@ -138,6 +193,30 @@ const ExamGuard = ({ children }) => {
         const syncInterval = setInterval(checkStatus, 20000);
         return () => clearInterval(syncInterval);
     }, [student]);
+
+    // Heartbeat pour signaler l'activité de l'étudiant
+    useEffect(() => {
+        if (!student || status !== 'running') return;
+
+        const sendHeartbeat = async () => {
+            try {
+                await fetch(`${API_URL}/api/heartbeat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        phone: student.phone,
+                        exam_id: 'en_attente'
+                    })
+                });
+            } catch (error) {
+                console.error("Erreur heartbeat:", error);
+            }
+        };
+
+        sendHeartbeat(); // Heartbeat immédiat
+        const heartbeatInterval = setInterval(sendHeartbeat, 10000); // Toutes les 10 secondes
+        return () => clearInterval(heartbeatInterval);
+    }, [student, status]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
