@@ -14,7 +14,10 @@ const ServerTimer = ({ studentName }) => {
 
         const connect = () => {
             try {
-                ws = new WebSocket(API_URL.replace('https://', 'wss://').replace('http://', 'ws://'));
+                // CORRECTION ICI : On force wss:// car le serveur est en https
+                const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
+                
+                ws = new WebSocket(wsUrl);
                 
                 ws.onopen = () => {
                     console.log('⏱️ Timer WebSocket connecté');
@@ -28,11 +31,11 @@ const ServerTimer = ({ studentName }) => {
                 };
 
                 ws.onerror = (error) => {
-                    console.error('Erreur WebSocket Timer:', error);
+                    // On ne log pas l'erreur complète pour éviter le spam console, juste un avertissement
+                    console.warn('Timer WS en attente...');
                 };
 
                 ws.onclose = () => {
-                    console.log('⏱️ Timer WebSocket déconnecté, reconnexion...');
                     reconnectTimeout = setTimeout(connect, 3000);
                 };
             } catch (error) {
@@ -46,7 +49,7 @@ const ServerTimer = ({ studentName }) => {
         return () => {
             if (reconnectTimeout) clearTimeout(reconnectTimeout);
             if (ws) {
-                ws.onclose = null; // Empêcher la reconnexion automatique
+                ws.onclose = null;
                 ws.close();
             }
         };
@@ -100,7 +103,7 @@ const ServerTimer = ({ studentName }) => {
 // --- COMPOSANT ExamGuard ---
 const ExamGuard = ({ children }) => {
     const [student, setStudent] = useState(null);
-    const [status, setStatus] = useState('loading');
+    const [status, setStatus] = useState('login'); 
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [formName, setFormName] = useState('');
     const [formPhone, setFormPhone] = useState('');
@@ -116,7 +119,9 @@ const ExamGuard = ({ children }) => {
 
         const connect = () => {
             try {
+                // CORRECTION ICI EGALEMENT
                 const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
+                
                 ws = new WebSocket(wsUrl);
                 
                 ws.onopen = () => {
@@ -129,7 +134,6 @@ const ExamGuard = ({ children }) => {
                     if (data.type === 'time_update') {
                         setTimeRemaining(data.timeRemaining);
                         
-                        // Mise à jour du statut basé sur le temps
                         if (!data.isRunning && data.timeRemaining === 0) {
                             setStatus('finished');
                         }
@@ -137,7 +141,7 @@ const ExamGuard = ({ children }) => {
                 };
 
                 ws.onerror = (error) => {
-                    console.error('Erreur WebSocket:', error);
+                    console.warn('Erreur WebSocket (reconnexion en cours...)');
                 };
                 
                 ws.onclose = () => {
@@ -157,21 +161,11 @@ const ExamGuard = ({ children }) => {
         return () => {
             if (reconnectTimeout) clearTimeout(reconnectTimeout);
             if (ws) {
-                ws.onclose = null; // Empêcher la reconnexion automatique lors du démontage
+                ws.onclose = null;
                 ws.close();
             }
         };
     }, [student]);
-
-    // Chargement de l'étudiant depuis localStorage
-    useEffect(() => {
-        const savedStudent = localStorage.getItem('exam_student');
-        if (savedStudent) {
-            setStudent(JSON.parse(savedStudent));
-        } else {
-            setStatus('login');
-        }
-    }, []);
 
     // Vérification périodique du statut
     useEffect(() => {
@@ -194,7 +188,7 @@ const ExamGuard = ({ children }) => {
         return () => clearInterval(syncInterval);
     }, [student]);
 
-    // Heartbeat pour signaler l'activité de l'étudiant
+    // Heartbeat
     useEffect(() => {
         if (!student || status !== 'running') return;
 
@@ -205,7 +199,7 @@ const ExamGuard = ({ children }) => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         phone: student.phone,
-                        exam_id: 'en_attente'
+                        exam_id: 'en_cours'
                     })
                 });
             } catch (error) {
@@ -213,8 +207,8 @@ const ExamGuard = ({ children }) => {
             }
         };
 
-        sendHeartbeat(); // Heartbeat immédiat
-        const heartbeatInterval = setInterval(sendHeartbeat, 10000); // Toutes les 10 secondes
+        sendHeartbeat();
+        const heartbeatInterval = setInterval(sendHeartbeat, 10000);
         return () => clearInterval(heartbeatInterval);
     }, [student, status]);
 
@@ -230,8 +224,7 @@ const ExamGuard = ({ children }) => {
             const data = await res.json();
             if (data.success) {
                 setStudent(data.student);
-                localStorage.setItem('exam_student', JSON.stringify(data.student));
-                setStatus('loading'); // Passer à loading pour vérifier le statut de l'examen
+                setStatus('loading'); 
             } else {
                 alert(data.error || "Erreur de connexion.");
             }
@@ -295,13 +288,14 @@ const ExamGuard = ({ children }) => {
                             )}
                         </button>
                     </form>
-                    {formName && formPhone && (
-                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-xs text-blue-700 text-center">
-                                💡 Vos informations sont pré-remplies depuis votre dernière visite
-                            </p>
-                        </div>
-                    )}
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-xs text-red-800 text-center flex flex-col items-center justify-center gap-1">
+                            <span className="font-bold flex items-center gap-1">
+                                <Lock size={12} /> Sécurité Active
+                            </span>
+                            <span>Si vous actualisez la page, vous devrez vous reconnecter.</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         );
@@ -371,7 +365,6 @@ const ExamGuard = ({ children }) => {
         );
     }
 
-    // --- L'EXAMEN EST EN COURS ---
     if (status === 'running') {
         return (
             <>

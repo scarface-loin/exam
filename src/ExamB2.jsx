@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   CheckCircle2, XCircle, BookOpen, Trophy, Menu, 
-  ChevronDown, ChevronUp, ArrowRight, ArrowLeft, Home 
+  ChevronDown, ChevronUp, ArrowRight, ArrowLeft, Home, Clock 
 } from 'lucide-react';
 
 // NOUVEAU : Import du composant de résultats détaillés
@@ -14,7 +14,8 @@ import examSolutionsFile from './data/b2/exam_solutions.json';
 
 const API_URL = "https://wavy-server.onrender.com";
 
-const ExamB2 = ({ student, onExit, submitTrigger }) => {
+// MODIFICATION ICI : Ajout de 'timeRemaining' dans les props
+const ExamB2 = ({ student, onExit, submitTrigger, timeRemaining }) => {
   
   // ==========================================
   // 1. FUSION DES DONNÉES (DATA + TEXTES)
@@ -61,27 +62,37 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [submitted, setSubmitted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [startTime] = useState(Date.now()); // NOUVEAU : Enregistrement du temps de début
-  const [timeTaken, setTimeTaken] = useState(0); // NOUVEAU : Temps total pris
+  const [startTime] = useState(Date.now()); 
+  const [timeTaken, setTimeTaken] = useState(0); 
   
   const currentPart = examData.parts[activePartIndex];
 
   // ==========================================
   // 3. LOGIQUE MÉTIER
   // ==========================================
+
+  // Fonction pour formater le temps serveur (ms -> MM:SS)
+  const formatTime = (ms) => {
+    if (ms === undefined || ms === null || ms < 0) return "00:00";
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   const handleAnswer = (questionId, value) => {
     if (showResults) return;
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  // AMÉLIORATION : Sauvegarde automatique des réponses
+  // Sauvegarde automatique des réponses
   useEffect(() => {
     if (!showResults && Object.keys(answers).length > 0) {
       sessionStorage.setItem(`exam_b2_answers_${student.phone}`, JSON.stringify(answers));
     }
   }, [answers, showResults, student.phone]);
 
-  // AMÉLIORATION : Récupération des réponses en cas de rechargement
+  // Récupération des réponses en cas de rechargement
   useEffect(() => {
     const savedAnswers = sessionStorage.getItem(`exam_b2_answers_${student.phone}`);
     if (savedAnswers) {
@@ -93,27 +104,61 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
     }
   }, [student.phone]);
 
+  // Gestion de la soumission automatique via le Trigger (Server timer = 0)
   useEffect(() => {
     if (submitTrigger > 0 && !showResults) {
       console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
-      setTimeTaken(Date.now() - startTime); // NOUVEAU : Calcul du temps pris
+      setTimeTaken(Date.now() - startTime); 
       setShowResults(true);
     }
   }, [submitTrigger, showResults, startTime]);
 
-  const calculateAndSendScore = () => {
-    let correctCount = 0;
+const calculateAndSendScore = () => {
+    let currentScore = 0;
+    let totalPossible = 0; // Le total est maintenant calculé dynamiquement
     const questionIds = Object.keys(solutions);
     
     questionIds.forEach(qid => {
       const userAns = (answers[qid] || '').toLowerCase().trim();
       const correctAns = (solutions[qid] || '').toLowerCase().trim();
-      if (userAns === correctAns && userAns !== '') correctCount++;
+      
+      // Convertir l'ID de question en nombre (ex: "1" -> 1)
+      const qNum = parseInt(qid, 10); 
+      let points = 0;
+
+      // ====================================================
+      // CONFIGURATION DES POINTS PAR EXERCICE
+      // Modifiez les chiffres (<= 5, <= 10) selon vos questions réelles
+      // ====================================================
+
+      // EXO 1 (Disons questions 1 à 5) -> 5 points
+      if (qNum >= 1 && qNum <= 5) {
+          points = 5;
+      } 
+      // EXO 2 (Disons questions 6 à 10) -> 2.5 points
+      else if (qNum >= 6 && qNum <= 10) {
+          points = 2.5;
+      } 
+      // EXO 3 et 4 (Le reste des questions, ex: 11 à 45) -> 1.5 points
+      else {
+          points = 1.5;
+      }
+      
+      // ====================================================
+
+      // 1. On ajoute la valeur de la question au Total Possible (Maximum atteignable)
+      totalPossible += points;
+
+      // 2. Si la réponse est correcte, on ajoute les points au score de l'élève
+      if (userAns === correctAns && userAns !== '') {
+          currentScore += points;
+      }
     });
 
-    const totalQuestions = questionIds.length;
-    setScore({ correct: correctCount, total: totalQuestions });
+    // Mise à jour de l'état local
+    setScore({ correct: currentScore, total: totalPossible });
 
+    // Envoi au serveur
     if (student && student.phone) {
       fetch(`${API_URL}/api/submit`, {
         method: 'POST',
@@ -122,17 +167,20 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
           phone: student.phone,
           exam_id: examSolutionsFile.exam_id,
           student_name: student.name,
-          score: correctCount,
-          total: totalQuestions,
+          score: currentScore,     // Score pondéré
+          total: totalPossible,    // Total pondéré
           answers: answers,
-          timeTaken: timeTaken // NOUVEAU : Envoi du temps pris
+          timeTaken: timeTaken
         })
       })
       .then(res => res.json())
       .then(() => {
         setSubmitted(true);
-        // NOUVEAU : Nettoyage des données sauvegardées
-        sessionStorage.removeItem(`exam_b2_answers_${student.phone}`);
+        // Nettoyage des réponses sauvegardées
+        const storageKey = examSolutionsFile.exam_id.includes('b2') 
+             ? `exam_b2_answers_${student.phone}` 
+             : `exam_b1_answers_${student.phone}`;
+        sessionStorage.removeItem(storageKey);
       })
       .catch(err => console.error("Erreur API:", err));
     }
@@ -140,7 +188,7 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
 
   useEffect(() => {
     if (showResults && !submitted) {
-      setTimeTaken(Date.now() - startTime); // Mise à jour finale du temps
+      setTimeTaken(Date.now() - startTime); 
       calculateAndSendScore();
     }
   }, [showResults, submitted, startTime]);
@@ -168,7 +216,6 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
   // 4. RENDU PRINCIPAL
   // ==========================================
 
-  // NOUVEAU : Si l'examen est terminé, afficher les résultats détaillés
   if (showResults && submitted) {
     return (
       <DetailedResults
@@ -183,6 +230,9 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
       />
     );
   }
+
+  // Calcul pour l'alerte visuelle (rouge si moins de 5 min)
+  const isUrgent = timeRemaining < 300000;
 
   return (
     <div className="min-h-screen bg-slate-50 pb-28 font-sans text-gray-900">
@@ -203,7 +253,7 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-gray-600 md:hidden hover:bg-gray-100 rounded-lg">
                   <Menu size={20} />
                </button>
-               <div>
+               <div className="hidden sm:block">
                   <h1 className="text-sm font-bold uppercase text-gray-400 tracking-wider">Telc B2</h1>
                   <p className="text-base font-extrabold text-blue-900 truncate max-w-[150px] sm:max-w-xs">
                     {currentPart.title}
@@ -212,17 +262,32 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
             </div>
 
              {!showResults ? (
-              <button 
-                onClick={() => { 
-                  if(confirm("Êtes-vous sûr de vouloir terminer l'examen ?")) {
-                    setTimeTaken(Date.now() - startTime);
-                    setShowResults(true);
-                  }
-                }}
-                className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition active:scale-95"
-              >
-                Terminer
-              </button>
+               <div className="flex items-center gap-2 sm:gap-4">
+                  
+                  {/* --- AFFICHAGE DU TEMPS SERVEUR --- */}
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-colors ${
+                      isUrgent 
+                        ? 'bg-red-50 border-red-200 text-red-600 animate-pulse' 
+                        : 'bg-white border-gray-200 text-gray-700'
+                  }`}>
+                      <Clock size={18} />
+                      <span className="font-mono font-bold text-lg tabular-nums">
+                          {formatTime(timeRemaining)}
+                      </span>
+                  </div>
+
+                  <button 
+                    onClick={() => { 
+                      if(confirm("Êtes-vous sûr de vouloir terminer l'examen ?")) {
+                        setTimeTaken(Date.now() - startTime);
+                        setShowResults(true);
+                      }
+                    }}
+                    className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition active:scale-95"
+                  >
+                    Terminer
+                  </button>
+               </div>
             ) : (
               <div className="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 text-blue-700">
                  Calcul...
@@ -328,10 +393,9 @@ const ExamB2 = ({ student, onExit, submitTrigger }) => {
 
 
 // =========================================================
-//  SOUS-COMPOSANTS (IDENTIQUES À L'ORIGINAL)
+//  SOUS-COMPOSANTS
 // =========================================================
 
-// --- 1. APPARIEMENT DE TITRES ---
 const MatchingPart = ({ part, answers, onAnswer, getBtnClass, showResults, solutions }) => {
    const [isHeadlinesOpen, setIsHeadlinesOpen] = useState(false);
 
@@ -402,7 +466,6 @@ const MatchingPart = ({ part, answers, onAnswer, getBtnClass, showResults, solut
    );
 };
 
-// --- 2. QCM AVEC TEXTE ---
 const MultipleChoicePart = ({ part, answers, onAnswer, showResults, solutions }) => {
    const [isTextOpen, setIsTextOpen] = useState(true);
 
@@ -464,7 +527,6 @@ const MultipleChoicePart = ({ part, answers, onAnswer, showResults, solutions })
    );
 };
 
-// --- 3. TROUS AVEC CHOIX INLINE (A/B/C) ---
 const GapFillChoicePart = ({ part, answers, onAnswer, getBtnClass, showResults, solutions }) => {
    const renderedText = useMemo(() => {
       return part.reading_text.split(/__\(\s*(\d+)\s*\)__/g).map((chunk, i) => {
@@ -507,7 +569,6 @@ const GapFillChoicePart = ({ part, answers, onAnswer, getBtnClass, showResults, 
    );
 };
 
-// --- 4. TROUS AVEC BANQUE DE MOTS (WORD BANK) ---
 const GapFillBankPart = ({ part, answers, onAnswer, showResults, solutions }) => {
     const [focusedQId, setFocusedQId] = useState(null);
 
