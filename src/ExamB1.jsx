@@ -4,6 +4,9 @@ import {
   ChevronDown, ChevronUp, ArrowRight, ArrowLeft, Home, Store 
 } from 'lucide-react';
 
+// NOUVEAU : Import du composant de résultats détaillés
+import DetailedResults from './DetailedResults';
+
 // === IMPORT DES DONNÉES SPÉCIFIQUES B1 ===
 import examDataStructure from './data/b1/exam_data.json';
 import examTextsSource from './data/b1/exam_texts.json';
@@ -21,13 +24,9 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
       const textSource = examTextsSource.texts[part.id];
       if (!textSource) return part;
 
-      // --- LOGIQUE SPÉCIFIQUE B1 ---
-
       // CAS 1 : Leseverstehen Teil 3 (Situations vs Annonces)
       if (part.type === 'matching_situations') {
-        // On fusionne les "items" (questions) avec le texte des situations
         const updatedItems = part.items.map(item => {
-           // On cherche le texte de la situation correspondante dans le fichier texts
            const situationObj = textSource.situations.find(s => s.id == item.question_id);
            return {
              ...item,
@@ -38,7 +37,7 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
         return {
           ...part,
           items: updatedItems,
-          ads: textSource.ads, // On ajoute les publicités (Anzeigen) pour l'affichage
+          ads: textSource.ads,
           description: part.instruction
         };
       }
@@ -70,6 +69,8 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [submitted, setSubmitted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [startTime] = useState(Date.now()); // NOUVEAU : Enregistrement du temps de début
+  const [timeTaken, setTimeTaken] = useState(0); // NOUVEAU : Temps total pris
 
   const currentPart = examData.parts[activePartIndex];
 
@@ -81,13 +82,32 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
+  // AMÉLIORATION : Sauvegarde automatique des réponses
   useEffect(() => {
-        // Si le trigger est supérieur à 0 (il a été appelé) et que l'examen n'est pas déjà fini
-        if (submitTrigger > 0 && !showResults) {
-            console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
-            setShowResults(true); // Déclenche la sauvegarde et l'affichage des résultats
-        }
-    }, [submitTrigger]); // Se déclenche seulement quand `submitTrigger` change
+    if (!showResults && Object.keys(answers).length > 0) {
+      sessionStorage.setItem(`exam_b1_answers_${student.phone}`, JSON.stringify(answers));
+    }
+  }, [answers, showResults, student.phone]);
+
+  // AMÉLIORATION : Récupération des réponses en cas de rechargement
+  useEffect(() => {
+    const savedAnswers = sessionStorage.getItem(`exam_b1_answers_${student.phone}`);
+    if (savedAnswers) {
+      try {
+        setAnswers(JSON.parse(savedAnswers));
+      } catch (e) {
+        console.error("Erreur lors de la récupération des réponses sauvegardées");
+      }
+    }
+  }, [student.phone]);
+
+  useEffect(() => {
+    if (submitTrigger > 0 && !showResults) {
+      console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
+      setTimeTaken(Date.now() - startTime); // NOUVEAU : Calcul du temps pris
+      setShowResults(true);
+    }
+  }, [submitTrigger, showResults, startTime]); 
     
   const calculateAndSendScore = () => {
     let correctCount = 0;
@@ -112,18 +132,26 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
           student_name: student.name,
           score: correctCount,
           total: totalQuestions,
-          answers: answers
+          answers: answers,
+          timeTaken: timeTaken // NOUVEAU : Envoi du temps pris
         })
       })
       .then(res => res.json())
-      .then(() => setSubmitted(true))
+      .then(() => {
+        setSubmitted(true);
+        // NOUVEAU : Nettoyage des données sauvegardées
+        sessionStorage.removeItem(`exam_b1_answers_${student.phone}`);
+      })
       .catch(err => console.error(err));
     }
   };
 
   useEffect(() => {
-    if (showResults && !submitted) calculateAndSendScore();
-  }, [showResults]);
+    if (showResults && !submitted) {
+      setTimeTaken(Date.now() - startTime); // Mise à jour finale du temps
+      calculateAndSendScore();
+    }
+  }, [showResults, submitted, startTime]);
 
   // Style boutons générique
   const getBtnClass = (questionId, optionKey, isSmall = false) => {
@@ -148,6 +176,23 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
   // ==========================================
   // 4. RENDU PRINCIPAL
   // ==========================================
+
+  // NOUVEAU : Si l'examen est terminé, afficher les résultats détaillés
+  if (showResults && submitted) {
+    return (
+      <DetailedResults
+        score={score}
+        answers={answers}
+        solutions={solutions}
+        examData={examData}
+        student={student}
+        examType="Telc B1"
+        timeTaken={timeTaken}
+        onExit={onExit}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 pb-28 font-sans text-gray-900">
       
@@ -170,14 +215,19 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
 
              {!showResults ? (
               <button 
-                onClick={() => { if(confirm("Valider l'examen ?")) setShowResults(true); }}
+                onClick={() => { 
+                  if(confirm("Êtes-vous sûr de vouloir terminer l'examen ?")) {
+                    setTimeTaken(Date.now() - startTime);
+                    setShowResults(true);
+                  }
+                }}
                 className="bg-emerald-600 text-white hover:bg-emerald-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition active:scale-95"
               >
                 Terminer
               </button>
             ) : (
-              <div className="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold border border-gray-200">
-                 {score.correct}/{score.total}
+              <div className="bg-emerald-100 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 text-emerald-700">
+                 Calcul...
               </div>
             )}
           </div>
@@ -204,25 +254,6 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
       {/* MAIN CONTENT */}
       <main className="max-w-3xl mx-auto p-4 space-y-6">
           
-          {/* Banner Résultats */}
-          {showResults && activePartIndex === 0 && (
-            <div className="bg-emerald-900 text-white rounded-2xl p-6 shadow-xl flex items-center justify-between animate-fade-in">
-              <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-full ${score.correct/score.total >= 0.6 ? 'bg-yellow-400 text-yellow-900' : 'bg-red-500 text-white'}`}>
-                    <Trophy className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-emerald-300">Résultat B1</p>
-                    <p className="text-3xl font-extrabold">{Math.round((score.correct / score.total) * 100)}%</p>
-                  </div>
-              </div>
-              <div className="text-right">
-                 <span className="text-4xl font-bold">{score.correct}</span>
-                 <span className="text-emerald-400 text-sm"> / {score.total}</span>
-              </div>
-            </div>
-          )}
-
           {/* Consigne */}
           <div className="bg-white border-l-4 border-emerald-500 rounded-r-xl shadow-sm p-4 text-sm text-gray-700 leading-relaxed">
              <span className="font-bold text-emerald-900 block mb-1">Aufgabe:</span>
@@ -292,10 +323,9 @@ const ExamB1 = ({ student, onExit, submitTrigger }) => {
 };
 
 // =========================================================
-//  SOUS-COMPOSANTS
+//  SOUS-COMPOSANTS (Identiques à l'original)
 // =========================================================
 
-// --- 1. QCM TEXTE (Teil 2) ---
 const MultipleChoicePart = ({ part, answers, onAnswer, showResults, solutions }) => {
   const [isTextOpen, setIsTextOpen] = useState(true);
 
@@ -358,13 +388,11 @@ const MultipleChoicePart = ({ part, answers, onAnswer, showResults, solutions })
   );
 };
 
-// --- 2. MATCHING SITUATIONS (Teil 3) ---
 const MatchingSituationsPart = ({ part, answers, onAnswer, getBtnClass, showResults, solutions }) => {
   const [isAdsOpen, setIsAdsOpen] = useState(false);
 
   return (
      <div className="space-y-6">
-        {/* Drawer Annonces */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden sticky top-28 z-30 transition-all">
            <button 
               onClick={() => setIsAdsOpen(!isAdsOpen)}
@@ -389,7 +417,6 @@ const MatchingSituationsPart = ({ part, answers, onAnswer, getBtnClass, showResu
            </div>
         </div>
 
-        {/* Liste Situations */}
         <div className="space-y-6">
            {part.items.map((item) => {
               const qId = item.question_id;
@@ -412,7 +439,6 @@ const MatchingSituationsPart = ({ part, answers, onAnswer, getBtnClass, showResu
                        {item.text}
                     </p>
                     
-                    {/* Grille Options (a-l + x) */}
                     <div>
                        <div className="flex flex-wrap gap-1.5 justify-center">
                           {part.options.map(opt => (
@@ -435,7 +461,6 @@ const MatchingSituationsPart = ({ part, answers, onAnswer, getBtnClass, showResu
   );
 };
 
-// --- 3. TROUS AVEC CHOIX (Sprachbausteine 1) ---
 const GapFillChoicePart = ({ part, answers, onAnswer, getBtnClass, showResults, solutions }) => {
   const renderedText = useMemo(() => {
      return part.reading_text.split(/__\(\s*(\d+)\s*\)__/g).map((chunk, i) => {
@@ -478,7 +503,6 @@ const GapFillChoicePart = ({ part, answers, onAnswer, getBtnClass, showResults, 
   );
 };
 
-// --- 4. TROUS AVEC BANQUE (Sprachbausteine 2) ---
 const GapFillBankPart = ({ part, answers, onAnswer, showResults, solutions }) => {
    const [focusedQId, setFocusedQId] = useState(null);
 
