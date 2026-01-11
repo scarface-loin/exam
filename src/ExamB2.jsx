@@ -242,7 +242,6 @@ const calculateAndSendScore = () => {
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-               {/* BOUTON RETOUR AU MENU PRINCIPAL */}
                <button 
                  onClick={onExit} 
                  className="p-2 bg-gray-100 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -263,18 +262,7 @@ const calculateAndSendScore = () => {
 
              {!showResults ? (
                <div className="flex items-center gap-2 sm:gap-4">
-                  
-                  {/* --- AFFICHAGE DU TEMPS SERVEUR --- */}
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-colors ${
-                      isUrgent 
-                        ? 'bg-red-50 border-red-200 text-red-600 animate-pulse' 
-                        : 'bg-white border-gray-200 text-gray-700'
-                  }`}>
-                      <Clock size={18} />
-                      <span className="font-mono font-bold text-lg tabular-nums">
-                          {formatTime(timeRemaining)}
-                      </span>
-                  </div>
+                  {/* LE TIMER A ÉTÉ SUPPRIMÉ ICI */}
 
                   <button 
                     onClick={() => { 

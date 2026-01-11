@@ -265,17 +265,7 @@ const ExamB1 = ({ student, onExit, submitTrigger, timeRemaining }) => {
 
              {!showResults ? (
                <div className="flex items-center gap-2 sm:gap-4">
-                  {/* --- AFFICHAGE DU TEMPS SERVEUR --- */}
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-colors ${
-                      isUrgent 
-                        ? 'bg-red-50 border-red-200 text-red-600 animate-pulse' 
-                        : 'bg-white border-gray-200 text-gray-700'
-                  }`}>
-                      <Clock size={18} />
-                      <span className="font-mono font-bold text-lg tabular-nums">
-                          {formatTime(timeRemaining)}
-                      </span>
-                  </div>
+                  {/* LE TIMER A ÉTÉ SUPPRIMÉ ICI */}
 
                   <button 
                     onClick={() => { 
