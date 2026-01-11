@@ -11,7 +11,7 @@ import examSolutionsFile from './data/b1/exam_solutions.json';
 
 const API_URL = "https://wavy-server.onrender.com";
 
-const ExamB1 = ({ student, onExit }) => {
+const ExamB1 = ({ student, onExit, submitTrigger }) => {
 
   // ==========================================
   // 1. FUSION DES DONNÉES (DATA + TEXTES)
@@ -82,12 +82,13 @@ const ExamB1 = ({ student, onExit }) => {
   };
 
   useEffect(() => {
-        if (forceSubmit && !showResults) {
+        // Si le trigger est supérieur à 0 (il a été appelé) et que l'examen n'est pas déjà fini
+        if (submitTrigger > 0 && !showResults) {
             console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
-            setShowResults(true); // Ceci va déclencher l'autre useEffect qui calcule et envoie le score
+            setShowResults(true); // Déclenche la sauvegarde et l'affichage des résultats
         }
-    }, [forceSubmit])
-
+    }, [submitTrigger]); // Se déclenche seulement quand `submitTrigger` change
+    
   const calculateAndSendScore = () => {
     let correctCount = 0;
     const questionIds = Object.keys(solutions);

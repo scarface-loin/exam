@@ -11,7 +11,7 @@ import {
 
 const API_URL = "https://wavy-server.onrender.com";
 
-const ExamB2 = ({ student, onExit }) => {
+const ExamB2 = ({ student, onExit, submitTrigger  }) => {
   
   // ==========================================
   // 1. FUSION DES DONNÉES (DATA + TEXTES)
@@ -69,12 +69,13 @@ const ExamB2 = ({ student, onExit }) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  useEffect(() => {
-        if (forceSubmit && !showResults) {
+ useEffect(() => {
+        // Si le trigger est supérieur à 0 (il a été appelé) et que l'examen n'est pas déjà fini
+        if (submitTrigger > 0 && !showResults) {
             console.log("TEMPS ÉCOULÉ ! Soumission automatique...");
-            setShowResults(true); // Ceci va déclencher l'autre useEffect qui calcule et envoie le score
+            setShowResults(true); // Déclenche la sauvegarde et l'affichage des résultats
         }
-    }, [forceSubmit])
+    }, [submitTrigger]); // Se déclenche seulement quand `submitTrigger` change
 
   const calculateAndSendScore = () => {
     let correctCount = 0;
